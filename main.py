@@ -18,7 +18,7 @@ app.config['CORS_ORIGINS'] = "localhost"
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['MAX_CONTENT_LENGTH'] = 3 * 1024 * 1024
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://jasik:Rahmat2005@mysql-jasik.alwaysdata.net/jasik_studyamerica'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@localhost:3306/studyamerica'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://jasik:Rahmat2005@mysql-jasik.alwaysdata.net/studyamerica'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
