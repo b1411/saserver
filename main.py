@@ -55,7 +55,7 @@ def save_photo(file):
 @app.route('/images/uploads/<path:filename>', methods=['GET'])
 def uploaded_image(filename):
     res = send_from_directory('images/uploads', filename)
-    res.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+    res.headers.add('Access-Control-Allow-Origin', '*')
     return 
 
 
@@ -97,7 +97,7 @@ def upload_user():
         response = jsonify({"filepath": data['processed_photo'], "message": "Пользователь успешно добавлен"})
         response.status_code = 200
         response.headers.add('Access-Control-Allow-Origin',
-                             'http://localhost:3000')
+                             '*')
         return response
 
     except Exception as e:
