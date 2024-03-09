@@ -55,7 +55,7 @@ def save_photo(file):
 def uploaded_image(filename):
     res = send_from_directory('images/uploads', filename)
     res.headers.add('Access-Control-Allow-Origin', '*')
-    return 
+    return res
 
 
 @app.route('/user', methods=['POST'])
