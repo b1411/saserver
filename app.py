@@ -35,7 +35,10 @@ def proccess_image(filepath, filename, remove_bg=False):
     bg = Image.open(path_to_bg)
     if remove_bg:
         image = rembg.remove(image, alpha_matting=True)
-    bg.paste(image, (0, 0), image)
+    
+    image = bg.size
+    random_x, random_y = random.randint(0, image[0]), random.randint(0, image[1])
+    bg.paste(image, (random_x, random_y), image)
     bg.save(os.path.join(
         app.config["UPLOAD_FOLDER"], f"{filename}_processed.png"))
 
