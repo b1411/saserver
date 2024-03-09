@@ -15,7 +15,7 @@ CORS(app)
 app.config["CORS_HEADERS"] = "Content-Type"
 app.config['UPLOAD_FOLDER'] = 'images/uploads/'
 app.config['CORS_ORIGINS'] = "localhost"
-app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
+app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg'}
 app.config['MAX_CONTENT_LENGTH'] = 3 * 1024 * 1024
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://jasik:Rahmat2005@mysql-jasik.alwaysdata.net/jasik_studyamerica'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -24,7 +24,7 @@ db.init_app(app)
 
 def allowed_file(filename):
     return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif'}
+           filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg'}
 
 
 def proccess_image(filepath, filename, remove_bg=False):
