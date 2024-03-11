@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_file, send_from_directory
+from flask import Flask, request, jsonify, send_file, send_from_directory, render_template
 from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 import os
@@ -7,6 +7,7 @@ from models import db, User
 from typing import Dict, Any
 from PIL import Image
 import rembg
+import jinja2
 
 app = Flask(__name__)
 
@@ -20,6 +21,8 @@ app.config['MAX_CONTENT_LENGTH'] = 3 * 1024 * 1024
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://jasik:Rahmat2005@mysql-jasik.alwaysdata.net/jasik_studyamerica'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
+
+environment = jinja2.Environment(loader=jinja2.FileSystemLoader('templates/'))
 
 
 def allowed_file(filename):
@@ -35,8 +38,9 @@ def proccess_image(filepath, filename, remove_bg=False):
     bg = Image.open(path_to_bg)
     if remove_bg:
         image = rembg.remove(image, alpha_matting=True)
-    
-    random_xy = random.randint(0, bg.size[0] - image.size[0]), random.randint(0, bg.size[1] - image.size[1])
+
+    random_xy = random.randint(
+        0, bg.size[0] - image.size[0]), random.randint(0, bg.size[1] - image.size[1])
     bg.paste(image, random_xy, image)
     bg.save(os.path.join(
         app.config["UPLOAD_FOLDER"], f"{filename}_processed.png"))
@@ -55,9 +59,17 @@ def save_photo(file):
 
 @app.route('/images/uploads/<path:filename>', methods=['GET'])
 def uploaded_image(filename):
-    res = send_from_directory('images/uploads', filename)
-    res.headers.add('Access-Control-Allow-Origin', '*')
-    return res
+    return render_template(
+        'templates/image.html',
+        filename=filename,
+        url=request.url_root + 'images/uploads/' + filename,
+        title="Image",
+        description="Image",
+        og_title="Study America",
+        og_description="Study America",
+        og_url="https://saclient.vercel.app/",
+        og_image=request.url_root + 'images/uploads/' + filename,
+    )
 
 
 @app.route('/user', methods=['POST'])
@@ -95,7 +107,8 @@ def upload_user():
             not not data['rembg'])).save(data['processed_photo'])
         db.session.add(new_user)
         db.session.commit()
-        response = jsonify({"filepath": data['processed_photo'], "message": "Пользователь успешно добавлен"})
+        response = jsonify(
+            {"filepath": data['processed_photo'], "message": "Пользователь успешно добавлен"})
         response.status_code = 200
         response.headers.add('Access-Control-Allow-Origin',
                              '*')
