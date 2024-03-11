@@ -7,7 +7,6 @@ from models import db, User
 from typing import Dict, Any
 from PIL import Image
 import rembg
-import jinja2
 
 app = Flask(__name__)
 
@@ -21,8 +20,6 @@ app.config['MAX_CONTENT_LENGTH'] = 3 * 1024 * 1024
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://jasik:Rahmat2005@mysql-jasik.alwaysdata.net/jasik_studyamerica'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
-
-environment = jinja2.Environment(loader=jinja2.FileSystemLoader('templates/'))
 
 
 def allowed_file(filename):
@@ -60,7 +57,7 @@ def save_photo(file):
 @app.route('/images/uploads/<path:filename>', methods=['GET'])
 def uploaded_image(filename):
     return render_template(
-        'templates/image.html',
+        'image.html',
         filename=filename,
         url=request.url_root + 'images/uploads/' + filename,
         title="Image",
