@@ -56,17 +56,11 @@ def save_photo(file):
 
 @app.route('/images/uploads/<path:filename>', methods=['GET'])
 def uploaded_image(filename):
-    return render_template(
-        'image.html',
-        filename=filename,
-        url='https://rakhmat.ninja/' + 'images/uploads/' + filename,
-        title="Image",
-        description="Image",
-        og_title="Study America",
-        og_description="Study America",
-        og_url="https://saclient.vercel.app/",
-        og_image='https://rakhmat.ninja/' + 'images/uploads/' + filename,
-    )
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+@app.route('/images/<path:filename>', methods=['GET'])
+def get_image():
+    return render_template('image.html')
 
 
 @app.route('/user', methods=['POST'])
