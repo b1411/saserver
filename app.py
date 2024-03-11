@@ -58,9 +58,10 @@ def save_photo(file):
 def uploaded_image(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
+
 @app.route('/images/<path:filename>', methods=['GET'])
-def get_image():
-    return render_template('image.html')
+def get_image(filename):
+    return render_template('image.html', filename=filename, title='Image', url='https://rakhmat.ninja/images/uploads/' + filename, og_image='https://rakhmat.ninja/images/uploads/' + filename, og_title='Image', og_description='Image', og_url='https://rakhmat.ninja/images/uploads/' + filename, og_type='image', og_site_name='Image')
 
 
 @app.route('/user', methods=['POST'])
