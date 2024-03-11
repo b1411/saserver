@@ -59,13 +59,13 @@ def uploaded_image(filename):
     return render_template(
         'image.html',
         filename=filename,
-        url=request.url_root + 'images/uploads/' + filename,
+        url='https://rakhmat.ninja/' + 'images/uploads/' + filename,
         title="Image",
         description="Image",
         og_title="Study America",
         og_description="Study America",
         og_url="https://saclient.vercel.app/",
-        og_image=request.url_root + 'images/uploads/' + filename,
+        og_image='https://rakhmat.ninja/' + 'images/uploads/' + filename,
     )
 
 
