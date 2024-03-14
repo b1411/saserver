@@ -7,6 +7,7 @@ from models import db, User
 from typing import Dict, Any
 from PIL import Image
 import rembg
+import requests
 
 app = Flask(__name__)
 
@@ -53,6 +54,32 @@ def save_photo(file):
         return filepath, filename
     return None
 
+def send_prize_message_to_tg(chat_id: str):
+    bot_token = os.environ.get('BOT_TOKEN')
+    url = f'https://api.telegram.org/bot{bot_token}/sendMessage'
+
+    payload = {
+        "text": """
+Классно, что ты прошел опрос и узнал, в каком университете США ты бы смог учиться! 
+Держи подарок от Study America — доступ к списку топовых американских университетов с полным финансированием иностранных студентов и к вебинару от ментора из Колумбийского университета https://study-america.org/vebinar-lm?utm_source=insta&utm_medium=poll&utm_campaign=uib 
+    """,
+        "parse_mode": "HTML",
+            "disable_web_page_preview": False,
+    "disable_notification": False,
+    "reply_to_message_id": None,
+    "chat_id": chat_id
+    }
+
+    headers = {
+    "accept": "application/json",
+    "User-Agent": "Telegram Bot SDK - (https://github.com/irazasyed/telegram-bot-sdk)",
+    "content-type": "application/json"
+    }
+
+    try: 
+        requests.post(url, json=payload, headers=headers)
+    except Exception as e:
+        print(e)
 
 @app.route('/images/uploads/<path:filename>', methods=['GET'])
 def uploaded_image(filename):
@@ -93,11 +120,17 @@ def upload_user():
     try:
         data['processed_photo'] = os.path.join(
             app.config["UPLOAD_FOLDER"], f"{filename}_processed.png")
-        new_user = User(**data)
+        
         proccess_image(photo_path, filename=filename, remove_bg=(
             not not data['rembg'])).save(data['processed_photo'])
+        
+        send_prize_message_to_tg(data['tg_username'])
+
+        new_user = User(**data)
         db.session.add(new_user)
+        
         db.session.commit()
+        
         response = jsonify(
             {"filepath": data['processed_photo'], "message": "Пользователь успешно добавлен"})
         response.status_code = 200
