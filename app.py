@@ -27,7 +27,7 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg'}
 
 
-def proccess_image(filepath, filename, remove_bg=False):
+def proccess_image(filepath, filename: str, remove_bg=False):
     image = Image.open(filepath)
     bgs = os.listdir('images/bgs')
     random_bg = random.choice(bgs)
@@ -40,7 +40,7 @@ def proccess_image(filepath, filename, remove_bg=False):
         0, bg.size[0] - image.size[0]), random.randint(0, bg.size[1] - image.size[1])
     bg.paste(image, random_xy, image)
     bg.save(os.path.join(
-        app.config["UPLOAD_FOLDER"], f"{filename}_processed.png"))
+        app.config["UPLOAD_FOLDER"], f"{filename.split('.')[0]}_processed.png"))
 
     return bg
 
@@ -70,7 +70,7 @@ def upload_user():
 
     existing_user = User.query.filter_by(email=email).first()
     if existing_user:
-        return jsonify({"message": "Пользователь уже существует"}), 409
+        return jsonify({"message": "Пользователь уже существует", "email": email}), 409
 
     data: Dict[str, str] = {
         "name": request.form['name'],
